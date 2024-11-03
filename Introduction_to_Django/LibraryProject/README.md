@@ -1,1 +1,1 @@
-Lets learn about Django
+#Read me file

@@ -1,18 +1,31 @@
-from django.shortcuts import render, redirect
-from .models import Book
-from .forms import ExampleForm  # Import the form
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Article
 
-def book_list(request):
-    books = Book.objects.all()
-    return render(request, 'bookshelf/book_list.html', {'books': books})
+@permission_required('app_name.can_view', raise_exception=True)
+def article_list(request):
+    articles = Article.objects.all()
+    return render(request, 'article_list.html', {'articles': articles})
 
-def example_view(request):
-    if request.method == 'POST':
-        form = ExampleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('book_list')  # Redirect after successful form submission
-    else:
-        form = ExampleForm()
+@permission_required('app_name.can_create', raise_exception=True)
+def article_create(request):
+    if request.method == "POST":
+        # Logic to create article
+        pass
+    return render(request, 'article_form.html')
 
-    return render(request, 'bookshelf/form_example.html', {'form': form})
+@permission_required('app_name.can_edit', raise_exception=True)
+def article_edit(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    if request.method == "POST":
+        # Logic to edit article
+        pass
+    return render(request, 'article_form.html', {'article': article})
+
+@permission_required('app_name.can_delete', raise_exception=True)
+def article_delete(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.delete()
+    return redirect('article_list')
+"book_list", "books"
+from .forms import ExampleForm
